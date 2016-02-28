@@ -9,11 +9,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.antonio.maklumi.hangdroid.MainActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:background="?attr/colorPrimary">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/imageView"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/toolbar"
         android:src="@drawable/hangman"
         />
 
@@ -67,9 +76,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:id="@+id/layoutAddLetter"
-        android:layout_below="@id/layoutLetters"
-        android:paddingTop="40dp"
-        >
+        android:layout_below="@id/layoutLetters">
+
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -101,8 +110,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView"
+        android:id="@+id/teksSalahtextView"
         android:layout_alignTop="@+id/imageView"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/colorPrimary" />
 </RelativeLayout>
