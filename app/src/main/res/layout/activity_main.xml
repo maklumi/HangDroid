@@ -113,6 +113,12 @@
         android:layout_alignTop="@+id/imageView"
         android:layout_alignParentEnd="true"
         android:textColor="@color/colorPrimary" />
-    <include layout="@layout/keyboard" />
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_keyboard"
+        android:name="com.antonio.maklumi.hangdroid.PapanKetik"
+        tools:layout="@layout/keyboard"
+        android:layout_below="@id/layoutAddLetter"/>
 
 </RelativeLayout>

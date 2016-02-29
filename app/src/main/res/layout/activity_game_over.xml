@@ -76,7 +76,8 @@
             android:paddingEnd="40dp"
             android:paddingStart="40dp"
             android:maxLength="10"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:maxLines="1" />
 
 
     </LinearLayout>

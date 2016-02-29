@@ -1,15 +1,15 @@
 package com.antonio.maklumi.hangdroid;
 
 import android.content.Intent;
-import android.content.res.Resources;
+
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +22,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsingPapanKetikListener{
     public static final String TAG = "MainActivity";
+    private static final String POINT_EXTRA = "POINT_EXTRA";
     private String perkataan;
 
     private boolean tekaHurufBetul;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView gambar;
     private boolean isPlaying;
 
-    private PapanKetik papanKetik;
+    PapanKetik papanKetik;
+    private int winCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +50,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        papanKetik = new PapanKetik();
-
-
         linearLayout = (LinearLayout) findViewById(R.id.layoutLetters);
         linearAddLetter = (LinearLayout) findViewById(R.id.layoutAddLetter);
+        linearAddLetter.setVisibility(View.GONE);
         gambar = (ImageView) findViewById(R.id.imageView);
 
         editText = (EditText) findViewById(R.id.editText);
         teksSalah = (TextView) findViewById(R.id.teksSalahtextView);
         semuaHurufYangPernahDiteka = "";
-        perkataan = "suka";
+        perkataan = "suku";
         bilanganHuruf = perkataan.length();
         isPlaying = true; //true : hide refresh menu, false: hide it
 
+        papanKetik = (PapanKetik) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_keyboard);
     }
 
     @Override
@@ -88,6 +90,23 @@ public class MainActivity extends AppCompatActivity {
     public void bilaButangOKDiTekan(View view) {
 
         String hurufDiberi = editText.getText().toString();
+
+        if (semuaHurufYangPernahDiteka.contains(hurufDiberi)) {
+            editText.setText("");
+            return;
+        }
+        semuaHurufYangPernahDiteka += hurufDiberi;
+
+        if (hurufDiberi.length() ==1) {
+            periksaHuruf(hurufDiberi);
+        } else {
+            Toast.makeText(this, "Taip satu huruf", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void tapisHuruf(String hurufDiberi){
+
 
         if (semuaHurufYangPernahDiteka.contains(hurufDiberi)) {
             editText.setText("");
@@ -140,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
             linearAddLetter.setVisibility(View.GONE);
             isPlaying = false;
             supportInvalidateOptionsMenu();
+            winCount++;
+            Intent intent = new Intent(this, GameOverActivity.class);
+            intent.putExtra(POINT_EXTRA, winCount);
+            startActivity(intent);
 
 
         } else if (bilanganTekaanSalah == 6) {
@@ -175,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
         semuaHurufYangPernahDiteka = "";
         bilanganTekaanSalah = 0;
         bilanganTekaanBetul = 0;
-
+        linearAddLetter.setVisibility(View.GONE);
+        papanKetik.enableKey();
 
     }
 
@@ -217,9 +241,15 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView) linearLayout.getChildAt(posisi);
 
-        textView.setText(String.valueOf(hurufRujukan)); //or Character.toString(char)
+        textView.setText(String.valueOf(hurufRujukan));
 
+    }
 
+    @Override
+    public void hurufDitaip(String huruf) {
+        tapisHuruf(huruf);
+
+        papanKetik.disableKey(huruf);
     }
 }
 

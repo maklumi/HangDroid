@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 /**
  * Created by Maklumi on 29-02-16.
@@ -17,6 +18,11 @@ public class GameOverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_over);
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_game_over_toolbar);
         setSupportActionBar(toolbar);
+
+        int markah = getIntent().getIntExtra("POINT_EXTRA", 0);
+
+        TextView textView = (TextView) findViewById(R.id.activity_game_over_score);
+        textView.setText(String.valueOf(markah));
 
     }
 
