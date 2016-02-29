@@ -1,5 +1,6 @@
 package com.antonio.maklumi.hangdroid;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -38,12 +39,16 @@ public class MainActivity extends AppCompatActivity {
     private ImageView gambar;
     private boolean isPlaying;
 
+    private PapanKetik papanKetik;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        papanKetik = new PapanKetik();
 
 
         linearLayout = (LinearLayout) findViewById(R.id.layoutLetters);
@@ -143,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
             linearAddLetter.setVisibility(View.GONE);
             isPlaying = false;
             supportInvalidateOptionsMenu();
+            Intent intent = new Intent(this, GameOverActivity.class);
+            startActivity(intent);
 
         }
     }

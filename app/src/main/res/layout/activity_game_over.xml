@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.antonio.maklumi.hangdroid.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/activity_game_over_toolbar"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/activity_game_over_imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/activity_game_over_toolbar"
+        android:src="@drawable/hangman"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimaryLight"
+        android:layout_below="@id/activity_game_over_imageView"
+        android:gravity="center"
+        android:id="@+id/layoutPoin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:text="10"
+            android:padding="10dp"
+            android:id="@+id/activity_game_over_score"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:text="Poin"
+            android:padding="10dp"
+            android:id="@+id/activity_game_over_poin"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/layoutRekodNama"
+        android:layout_below="@id/layoutPoin">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Rekod nama"
+            android:background="@color/colorAccent"
+            android:id="@+id/button"
+            android:allowUndo="false" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/activity_game_over_nama_editText"
+            android:paddingEnd="40dp"
+            android:paddingStart="40dp"
+            android:maxLength="10"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
+</RelativeLayout>
