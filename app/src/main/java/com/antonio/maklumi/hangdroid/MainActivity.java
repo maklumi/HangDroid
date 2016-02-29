@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
 
         papanKetik = (PapanKetik) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_keyboard);
+
+        //setPerkataanRandom();
     }
 
     @Override
@@ -96,6 +99,19 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
             mulaSemula();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setPerkataanRandom() {
+        LoadFromAltLoc loadFromAltLoc = new LoadFromAltLoc();
+        String words = loadFromAltLoc.getOutput();
+
+        String[] arrayWords = words.split(" ");
+
+        for (int i = 0; i < arrayWords.length; i++) {
+            if (arrayWords[i].length() != 4)
+                Log.d(TAG, "some words too long");
+        }
+        Log.d(TAG, "all words are 4 letter long");
     }
 
     public void tapisHuruf(String hurufDiberi){
