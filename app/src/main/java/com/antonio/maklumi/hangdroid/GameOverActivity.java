@@ -30,6 +30,7 @@ public class GameOverActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.refresh:
+
                 finish();
         }
         return super.onOptionsItemSelected(item);

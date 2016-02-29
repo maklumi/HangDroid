@@ -65,7 +65,8 @@ public class PapanKetik extends Fragment implements OnClickListener {
     public void disableKey(String key){
         for (int i = 0; i < mB.length; i++) {
            if ( mB[i].getTag() == key ) {
-             //  mB[i].getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
+               int colorInt = getResources().getColor(R.color.sedikitGrey);
+               mB[i].getBackground().setColorFilter(colorInt, PorterDuff.Mode.MULTIPLY);
                mB[i].setEnabled(false);
 
            }
@@ -74,6 +75,7 @@ public class PapanKetik extends Fragment implements OnClickListener {
 
     public void enableKey(){
         for (int i = 0; i < mB.length; i++) {
+            mB[i].getBackground().setColorFilter(null);
             mB[i].setEnabled(true);
         }
     }

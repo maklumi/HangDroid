@@ -15,8 +15,8 @@
     </android.support.v7.widget.Toolbar>
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
         android:id="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/toolbar"
@@ -32,8 +32,8 @@
         android:background="@color/colorPrimaryLight"
         android:layout_below="@id/imageView"
         android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:id="@+id/layoutLetters">
 
         <TextView
@@ -69,56 +69,25 @@
             android:id="@+id/textView4"/>
 
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/layoutAddLetter"
-        android:layout_below="@id/layoutLetters">
 
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Satu Huruf"
-            android:id="@+id/textViewSatuHuruf" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/editText"
-            android:inputType="text"
-            android:maxLength="1"
-            android:paddingEnd="40dp"
-            android:paddingStart="40dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="OK"
-            android:background="@color/colorAccent"
-            android:id="@+id/button"
-            android:onClick="bilaButangOKDiTekan" />
-    </LinearLayout>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/teksSalahtextView"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/colorPrimary" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Arahan: teka ejaan apa"
+            android:id="@+id/textViewArahanTeka"
+            android:layout_below="@id/layoutLetters"
+            android:paddingTop="16dp"
+        />
+
+
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_keyboard"
+        android:layout_alignParentBottom="true"
         android:name="com.antonio.maklumi.hangdroid.PapanKetik"
         tools:layout="@layout/keyboard"
-        android:layout_below="@id/layoutAddLetter"/>
+        android:layout_below="@id/textViewArahanTeka"/>
 
 </RelativeLayout>

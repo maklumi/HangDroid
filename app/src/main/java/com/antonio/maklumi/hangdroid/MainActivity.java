@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.PersistableBundle;
 import android.support.v4.content.ContextCompat;
 
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,17 +25,17 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsingPapanKetikListener{
     public static final String TAG = "MainActivity";
     private static final String POINT_EXTRA = "POINT_EXTRA";
+
     private String perkataan;
 
     private boolean tekaHurufBetul;
     private int bilanganHuruf;
     private int bilanganTekaanSalah;
     private int bilanganTekaanBetul;
-    private TextView teksSalah;
     private ArrayList<Drawable> lapisan = new ArrayList<>();
-    private LinearLayout linearLayout;
-    private LinearLayout linearAddLetter;
-    private EditText editText;
+    private LinearLayout linearLayoutPetakTeka;
+
+
     private String semuaHurufYangPernahDiteka;
     private ImageView gambar;
     private boolean isPlaying;
@@ -46,17 +46,16 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            winCount = savedInstanceState.getInt(POINT_EXTRA);
+        }
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        linearLayout = (LinearLayout) findViewById(R.id.layoutLetters);
-        linearAddLetter = (LinearLayout) findViewById(R.id.layoutAddLetter);
-        linearAddLetter.setVisibility(View.GONE);
+        linearLayoutPetakTeka = (LinearLayout) findViewById(R.id.layoutLetters);
         gambar = (ImageView) findViewById(R.id.imageView);
 
-        editText = (EditText) findViewById(R.id.editText);
-        teksSalah = (TextView) findViewById(R.id.teksSalahtextView);
         semuaHurufYangPernahDiteka = "";
         perkataan = "suku";
         bilanganHuruf = perkataan.length();
@@ -64,6 +63,20 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
 
         papanKetik = (PapanKetik) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_keyboard);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        //save current game score
+        outState.putInt(POINT_EXTRA, winCount);
+        super.onSaveInstanceState(outState, outPersistentState);
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mulaSemula();
     }
 
     @Override
@@ -79,45 +92,19 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.refresh) {
+        if (item.getItemId() == R.id.refresh) {
             mulaSemula();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void bilaButangOKDiTekan(View view) {
-
-        String hurufDiberi = editText.getText().toString();
-
-        if (semuaHurufYangPernahDiteka.contains(hurufDiberi)) {
-            editText.setText("");
-            return;
-        }
-        semuaHurufYangPernahDiteka += hurufDiberi;
-
-        if (hurufDiberi.length() ==1) {
-            periksaHuruf(hurufDiberi);
-        } else {
-            Toast.makeText(this, "Taip satu huruf", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
     public void tapisHuruf(String hurufDiberi){
+        if (semuaHurufYangPernahDiteka.contains(hurufDiberi)) return;
 
-
-        if (semuaHurufYangPernahDiteka.contains(hurufDiberi)) {
-            editText.setText("");
-            return;
-        }
         semuaHurufYangPernahDiteka += hurufDiberi;
 
         if (hurufDiberi.length() ==1) {
             periksaHuruf(hurufDiberi);
-        } else {
-            Toast.makeText(this, "Taip satu huruf", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -140,65 +127,47 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
             }
         }
 
-        if (tekaHurufBetul==false)  {
+        if (!tekaHurufBetul)  {
             bilanganTekaanSalah++;
             updateGambarGunaLayerDrawable(bilanganTekaanSalah);
-            updateTeksSalah(hurufTeka);
         }
 
-        editText.setText("");
-
         periksaMenangKalah();
-
     }
 
     private void periksaMenangKalah() {
         if (bilanganTekaanBetul == bilanganHuruf) {
             Toast.makeText(this, "Menang", Toast.LENGTH_LONG).show();
             //TODO animation win
-            linearAddLetter.setVisibility(View.GONE);
             isPlaying = false;
             supportInvalidateOptionsMenu();
             winCount++;
             Intent intent = new Intent(this, GameOverActivity.class);
             intent.putExtra(POINT_EXTRA, winCount);
             startActivity(intent);
-
-
         } else if (bilanganTekaanSalah == 6) {
             Toast.makeText(this, "Cuba lagi", Toast.LENGTH_LONG).show();
             gambar.setImageResource(R.drawable.android_dead);
-            linearAddLetter.setVisibility(View.GONE);
+
             isPlaying = false;
             supportInvalidateOptionsMenu();
             Intent intent = new Intent(this, GameOverActivity.class);
+            intent.putExtra(POINT_EXTRA, winCount);
             startActivity(intent);
-
         }
-    }
-
-    private void updateTeksSalah(char hurufTeka) {
-        String senaraiHurufSediaAda = teksSalah.getText().toString();
-        if (senaraiHurufSediaAda.contains(Character.toString(hurufTeka))) {
-            return;
-        }
-        teksSalah.setText(senaraiHurufSediaAda + Character.toString(hurufTeka));
     }
 
     private void mulaSemula() {
-        teksSalah.setText("");
         for (int i = 0; i < bilanganHuruf; i++) {
-            TextView textView = (TextView) linearLayout.getChildAt(i);
+            TextView textView = (TextView) linearLayoutPetakTeka.getChildAt(i);
             textView.setText("_");
         }
-        editText.setText("");
+
         gambar.setImageResource(R.drawable.hangman);
-        linearAddLetter.setVisibility(View.VISIBLE);
         lapisan.clear();
         semuaHurufYangPernahDiteka = "";
         bilanganTekaanSalah = 0;
         bilanganTekaanBetul = 0;
-        linearAddLetter.setVisibility(View.GONE);
         papanKetik.enableKey();
 
     }
@@ -239,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
      */
     private void updatePetakTeka(int posisi, char hurufRujukan) {
 
-        TextView textView = (TextView) linearLayout.getChildAt(posisi);
+        TextView textView = (TextView) linearLayoutPetakTeka.getChildAt(posisi);
 
         textView.setText(String.valueOf(hurufRujukan));
 
