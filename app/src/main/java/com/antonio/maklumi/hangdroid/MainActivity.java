@@ -14,18 +14,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsingPapanKetikListener{
     public static final String TAG = "MainActivity";
     private static final String POINT_EXTRA = "POINT_EXTRA";
+    private static final String REQUEST_PERKATAAN = "REQUEST_PERKATAAN";
+    private static final int REQUESTCODE_PERKATAAN = 1;
 
     private String perkataan;
 
@@ -36,10 +38,10 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
     private ArrayList<Drawable> lapisan = new ArrayList<>();
     private LinearLayout linearLayoutPetakTeka;
 
-
+    private String words;
     private String semuaHurufYangPernahDiteka;
     private ImageView gambar;
-    private boolean isPlaying;
+    private boolean showRefreshButton;
 
     PapanKetik papanKetik;
     private int winCount;
@@ -59,14 +61,33 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
 
         semuaHurufYangPernahDiteka = "";
         perkataan = "suku";
-        bilanganHuruf = perkataan.length();
-        isPlaying = true; //true : hide refresh menu, false: hide it
+
+        showRefreshButton = false;
 
         papanKetik = (PapanKetik) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_keyboard);
 
-        //setPerkataanRandom();
+     //   mulaSemula();
+        setPerkataanRandom();
     }
+
+    private void mulaSemula() {
+        for (int i = 0; i < bilanganHuruf; i++) {
+            TextView textView = (TextView) linearLayoutPetakTeka.getChildAt(i);
+            textView.setText("_");
+        }
+
+        gambar.setImageResource(R.drawable.hangman);
+        lapisan.clear();
+        semuaHurufYangPernahDiteka = "";
+        bilanganTekaanSalah = 0;
+        bilanganTekaanBetul = 0;
+        papanKetik.enableKey();
+        setaRandomWord(words);
+        bilanganHuruf = perkataan.length();
+
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -77,18 +98,12 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        mulaSemula();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        if (isPlaying) {
-            menu.getItem(0).setVisible(false);
-        } else {
+        if (showRefreshButton) {
             menu.getItem(0).setVisible(true);
+        } else {
+            menu.getItem(0).setVisible(false);
         }
         return true;
     }
@@ -102,16 +117,29 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
     }
 
     public void setPerkataanRandom() {
-        LoadFromAltLoc loadFromAltLoc = new LoadFromAltLoc();
-        String words = loadFromAltLoc.getOutput();
+        Intent intent = new Intent(this, LoadFromAltLoc.class);
+        startActivityForResult(intent,REQUESTCODE_PERKATAAN);
+    }
 
-        String[] arrayWords = words.split(" ");
-
-        for (int i = 0; i < arrayWords.length; i++) {
-            if (arrayWords[i].length() != 4)
-                Log.d(TAG, "some words too long");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUESTCODE_PERKATAAN && resultCode == RESULT_OK) {
+            words = data.getStringExtra(REQUEST_PERKATAAN);
+            setaRandomWord(words);
         }
-        Log.d(TAG, "all words are 4 letter long");
+    }
+
+    private void setaRandomWord(String wordlist) {
+        String[] arrayWords = wordlist.split(" ");
+        int totalWords = arrayWords.length;
+        Random random = new Random();
+        int arandomNumber = random.nextInt(totalWords - 1) + 1; // between 1 and (totalword -1)
+        perkataan =  arrayWords[arandomNumber].toLowerCase();
+
+        if (perkataan.length() != 4) {
+            perkataan = "aaaa";
+        }
     }
 
     public void tapisHuruf(String hurufDiberi){
@@ -152,40 +180,29 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
     }
 
     private void periksaMenangKalah() {
+        boolean gameOver = false;
         if (bilanganTekaanBetul == bilanganHuruf) {
             Toast.makeText(this, "Menang", Toast.LENGTH_LONG).show();
             //TODO animation win
-            isPlaying = false;
-            supportInvalidateOptionsMenu();
+            showRefreshButton = true;
+            gameOver = true;
             winCount++;
-            Intent intent = new Intent(this, GameOverActivity.class);
-            intent.putExtra(POINT_EXTRA, winCount);
-            startActivity(intent);
+
         } else if (bilanganTekaanSalah == 6) {
-            Toast.makeText(this, "Cuba lagi", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Jawapan: " + perkataan, Toast.LENGTH_LONG).show();
             gambar.setImageResource(R.drawable.android_dead);
+            showRefreshButton = true;
+            gameOver = true;
+        }
 
-            isPlaying = false;
-            supportInvalidateOptionsMenu();
+        if (gameOver) {
+            mulaSemula();
+
             Intent intent = new Intent(this, GameOverActivity.class);
             intent.putExtra(POINT_EXTRA, winCount);
             startActivity(intent);
+
         }
-    }
-
-    private void mulaSemula() {
-        for (int i = 0; i < bilanganHuruf; i++) {
-            TextView textView = (TextView) linearLayoutPetakTeka.getChildAt(i);
-            textView.setText("_");
-        }
-
-        gambar.setImageResource(R.drawable.hangman);
-        lapisan.clear();
-        semuaHurufYangPernahDiteka = "";
-        bilanganTekaanSalah = 0;
-        bilanganTekaanBetul = 0;
-        papanKetik.enableKey();
-
     }
 
      private void updateGambarGunaLayerDrawable(int bilanganTekaanSalah) {
@@ -232,9 +249,8 @@ public class MainActivity extends AppCompatActivity implements PapanKetik.OnUsin
 
     @Override
     public void hurufDitaip(String huruf) {
-        tapisHuruf(huruf);
-
         papanKetik.disableKey(huruf);
+        tapisHuruf(huruf);
     }
 }
 

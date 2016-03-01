@@ -39,7 +39,6 @@ public class PapanKetik extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.keyboard, container, false);
 
     }
@@ -68,15 +67,14 @@ public class PapanKetik extends Fragment implements OnClickListener {
                int colorInt = getResources().getColor(R.color.sedikitGrey);
                mB[i].getBackground().setColorFilter(colorInt, PorterDuff.Mode.MULTIPLY);
                mB[i].setEnabled(false);
-
            }
         }
     }
 
     public void enableKey(){
         for (int i = 0; i < mB.length; i++) {
-            mB[i].getBackground().setColorFilter(null);
             mB[i].setEnabled(true);
+            mB[i].getBackground().setColorFilter(null);
         }
     }
 
