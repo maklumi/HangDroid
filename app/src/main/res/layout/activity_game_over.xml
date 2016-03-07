@@ -14,14 +14,17 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/activity_game_over_imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/activity_game_over_toolbar"
-        android:src="@drawable/hangman"
-        />
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/activity_game_over_toolbar"
+       android:id="@+id/activity_game_over_scrollview">
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/activity_game_over_textview_showscore"/>
+   </ScrollView>
 
 
     <LinearLayout
@@ -30,7 +33,7 @@
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimaryLight"
-        android:layout_below="@id/activity_game_over_imageView"
+        android:layout_below="@id/activity_game_over_scrollview"
         android:gravity="center"
         android:id="@+id/layoutPoin">
 
@@ -67,7 +70,8 @@
             android:text="Rekod nama"
             android:background="@color/colorAccent"
             android:id="@+id/button"
-            android:allowUndo="false" />
+            android:allowUndo="false"
+            android:onClick="saveScore"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
